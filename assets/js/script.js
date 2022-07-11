@@ -1,8 +1,12 @@
 const Gameboard = (() => {
-  const gameboardArray = [3][3];
+  const gameboardArray = [];
+  const squares = document.querySelectorAll('.square');
 
+  squares.forEach(square => {
+    gameboardArray.push(square);
+  });
 })();
 
-const Player = () => {
+const Player = (symbol) => {
 
 };

@@ -1,21 +1,69 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+:root {
+  --white-custom: #fef3f4;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 
-  font-family: "Noto Sans", sans-serif;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: var(--white-custom);
 }
 
 .container {
   width: 100vw;
   height: 100vh;
+
+  display: grid;
+  justify-content: center;
+  grid-template-rows: 1fr 8fr;
 }
 
 nav {
-  margin-bottom: 20px;
+  width: 100vw;
+  margin-bottom: 35px;
   padding: 20px;
   
+  background-color: white;
   box-shadow: 0px 1px 7px 1px #6a6a6bb2;
+
+  display: grid;
+  align-items: center;
+}
+
+.display {
+  display: grid;
+}
+
+.gameboard {
+  width: 550px;
+  max-width: 85%;
+  margin: 0 auto 45px;
+
+  background-color: #1c1917;
+  box-shadow:  0 0 1px #1c1917;
+  gap: 3px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+.gameboard .square {
+  background: #7e22ce;
+  color: var(--white-custom);
+  text-shadow: 0px 0px 6px #fee2e2, 0px 0px 6px #ede9fe;
+  
+  cursor: pointer;
+  font-size: 9rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
