@@ -11,14 +11,15 @@ const Game = (() => {
     let squareId = e.target.id;
 
     let player = getActivePlayer();
-    toggleActivePlayer();
 
     let symbol = player.getSymbol();
 
     let content = Gameboard.getSquareContent(squareId);
 
     if (content == '') {
-      Gameboard.setSquareContent(squareId, symbol)
+      Gameboard.setSquareContent(squareId, symbol);
+    
+      toggleActivePlayer();
     }
   };
 
