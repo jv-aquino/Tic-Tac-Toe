@@ -19,16 +19,13 @@ body {
 
 .container {
   width: 100vw;
-  height: 100vh;
 
   display: grid;
   justify-content: center;
-  grid-template-rows: 1fr 8fr;
 }
 
 nav {
   width: 100vw;
-  margin-bottom: 35px;
   padding: 20px;
   
   background-color: white;
@@ -43,9 +40,9 @@ nav {
 }
 
 .gameboard {
-  width: 550px;
-  max-width: 85%;
+  width: min(550px, 85%);
   margin: 0 auto 45px;
+  height: auto;
 
   background-color: #1c1917;
   box-shadow:  0 0 1px #1c1917;
@@ -53,9 +50,13 @@ nav {
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-auto-rows: 1fr;
 }
 .gameboard .square {
+  width: min(calc(28.3vw - 2px), calc(calc(550px / 3) - 2px));
+  height: 165px;
+  margin: 0;
+
   background: #7e22ce;
   color: var(--white-custom);
   text-shadow: 0px 0px 6px #fee2e2, 0px 0px 6px #ede9fe;
@@ -66,4 +67,10 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.winner {
+  margin: 30px auto 0;
+  font-size: 2.4rem;
+  font-weight: bold;
 }
