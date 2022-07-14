@@ -113,7 +113,22 @@ const Gameboard = (() => {
     let diagonals = [];
     let winner = null;
 
-    return null;
+    let j = 4;
+
+    for(let i = 0; j >= 2; i = i + 2, j = j - 2) {
+      diagonals[i] = [gameboardArray[i], gameboardArray[i + j], gameboardArray[i + j*2]];
+    }
+    console.log(diagonals);
+
+    diagonals.forEach(diagonal => {
+      const result = diagonal.every(element => {
+        if (element.textContent == diagonal[0].textContent && element.textContent != '') {
+          return true;
+        }
+      });
+      winner = result ? diagonal[0].textContent : winner;
+    });
+    return winner;
   };
 
   return {getSquareContent, setSquareContent, getGameboard, checkColumns, checkDiagonals, checkRows};
