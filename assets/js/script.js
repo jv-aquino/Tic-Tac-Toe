@@ -4,9 +4,15 @@ const Game = (() => {
 
   const printWinner = (winner) => {
     activeGame = false;
+    
     const winnerDiv = document.querySelector('.winner');
 
-    winnerDiv.textContent = 'Player ' + winner + ' won!';
+    if (winner == 'Tie') {
+      winnerDiv.textContent = 'Tie!';
+    }
+    else {
+      winnerDiv.textContent = 'Player ' + winner + ' won!';
+    }
 
     winnerDiv.style.marginBottom = '30px';
   };
@@ -24,6 +30,9 @@ const Game = (() => {
     else if (!(Gameboard.checkDiagonals() == null)) {
       winner = Gameboard.checkDiagonals();
       printWinner(winner);
+    }
+    else if (!(Gameboard.checkTie() == null)) {
+      printWinner('Tie');
     }
   };
 
@@ -118,7 +127,6 @@ const Gameboard = (() => {
     for(let i = 0; j >= 2; i = i + 2, j = j - 2) {
       diagonals[i] = [gameboardArray[i], gameboardArray[i + j], gameboardArray[i + j*2]];
     }
-    console.log(diagonals);
 
     diagonals.forEach(diagonal => {
       const result = diagonal.every(element => {
@@ -131,7 +139,16 @@ const Gameboard = (() => {
     return winner;
   };
 
-  return {getSquareContent, setSquareContent, getGameboard, checkColumns, checkDiagonals, checkRows};
+  const checkTie = () => {
+    const result = gameboardArray.every(element => {
+      if (element.textContent != '') {
+        return true;
+      }
+    });
+    return result ? result : null;
+  };
+
+  return {getSquareContent, setSquareContent, getGameboard, checkColumns, checkDiagonals, checkRows, checkTie};
 })();
 
 const Player = (symbol, lastClick) => {
