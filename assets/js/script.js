@@ -1,54 +1,67 @@
 let player1, player2;
 
 const Settings = (() => {
-  const xButton = document.querySelector('#X');
-  const oButton = document.querySelector('#O');
+  const xButton = document.querySelector("#X");
+  const oButton = document.querySelector("#O");
+  let restart = false;
 
   const checkStartButtonUI = () => {
-    if (p1Name.value != '' && p2Name.value != '') {
-      start.classList.add('abled')
-    }
-    else {
-      start.classList.remove('abled')
+    if (p1Name.value != "" && p2Name.value != "") {
+      start.classList.add("abled");
+    } else {
+      start.classList.remove("abled");
     }
   };
 
   const startGame = () => {
-    if (p1Name.value != '' && p2Name.value != '') {
+    if (p1Name.value != "" && p2Name.value != "") {
+      if (restart) {
+        Gameboard.clean();
+        Game.printWinner("restart");
+      }
+
       Game.setActiveGame(true);
+      Gameboard.setVisible(false);
 
-      p1Symbol = (xButton.className == 'abled') ? 'X' : 'O';
-      p2Symbol = (xButton.className == 'disabled') ? 'X' : 'O';
+      p1Symbol = xButton.className == "abled" ? "X" : "O";
+      p2Symbol = xButton.className == "disabled" ? "X" : "O";
 
-      let p1FirstMove = (xButton.className == 'abled') ? true : false;
+      let p1FirstMove = xButton.className == "abled" ? true : false;
 
       player1 = Player(p1Symbol, p1FirstMove, p1Name.value);
       player2 = Player(p2Symbol, !p1FirstMove, p2Name.value);
     }
-  }
+  };
   const toggleSymbol = (e) => {
-    xButton.classList.toggle('abled');
-    xButton.classList.toggle('disabled');
+    xButton.classList.toggle("abled");
+    xButton.classList.toggle("disabled");
 
-    oButton.classList.toggle('abled');
-    oButton.classList.toggle('disabled');
+    oButton.classList.toggle("abled");
+    oButton.classList.toggle("disabled");
   };
 
-  const p1Name = document.querySelector('#p1');
-  const p2Name = document.querySelector('#p2');
-  p1Name.addEventListener('keyup', checkStartButtonUI);
-  p2Name.addEventListener('keyup', checkStartButtonUI);
+  const restartGame = () => {
+    restart = true;
+    start.textContent = "Restart";
+  };
 
-  const symbolsButtons = Array.from(document.querySelectorAll('.symbols button'));
-  const start = document.querySelector('#start');
+  const p1Name = document.querySelector("#p1");
+  const p2Name = document.querySelector("#p2");
+  p1Name.addEventListener("keyup", checkStartButtonUI);
+  p2Name.addEventListener("keyup", checkStartButtonUI);
 
-  start.addEventListener('click',startGame);
+  const symbolsButtons = Array.from(
+    document.querySelectorAll(".symbols button")
+  );
+  const start = document.querySelector("#start");
 
-  symbolsButtons.forEach(button => {
-    button.addEventListener('click', toggleSymbol);
+  start.addEventListener("click", startGame);
+
+  symbolsButtons.forEach((button) => {
+    button.addEventListener("click", toggleSymbol);
   });
 
-  return {};
+  return { restartGame };
 })();
 
 const Game = (() => {
@@ -57,43 +70,53 @@ const Game = (() => {
 
   const printWinner = (winner) => {
     setActiveGame(false);
-    const winnerDiv = document.querySelector('.winner');
+    Settings.restartGame();
 
-    if (winner == 'Tie') {
-      winnerDiv.textContent = 'Tie!';
-    }
-    else {
-      winnerDiv.textContent = 'Player ' + winner + ' won!';
+    const winnerDiv = document.querySelector(".winner");
+
+    if (winner == "Tie") {
+      winnerDiv.textContent = "Tie!";
+    } else if (winner == "restart") {
+      winnerDiv.textContent = "";
+    } else {
+      winnerDiv.textContent = "Player " + winner + " won!";
     }
 
-    winnerDiv.style.marginBottom = '30px';
+    winnerDiv.style.marginBottom = "30px";
+    Gameboard.setVisible(true);
   };
 
   const checkGameOver = () => {
     // The winner is altered only if there's a winner
     if (!(Gameboard.checkColumns() == null)) {
-      winner = Gameboard.checkColumns();
-      
-      let winnerName = (player1.getSymbol() == winner) ? player1.getName() : player2.getName();
+      winnerSymbol = Gameboard.checkColumns();
+
+      let winnerName =
+        player1.getSymbol() == winnerSymbol
+          ? player1.getName()
+          : player2.getName();
 
       printWinner(winnerName);
-    }
-    else if (!(Gameboard.checkRows() == null)) {
-      winner = Gameboard.checkRows();
-      
-      let winnerName = (player1.getSymbol() == winner) ? player1.getName() : player2.getName();
+    } else if (!(Gameboard.checkRows() == null)) {
+      winnerSymbol = Gameboard.checkRows();
+
+      let winnerName =
+        player1.getSymbol() == winnerSymbol
+          ? player1.getName()
+          : player2.getName();
 
       printWinner(winnerName);
-    }
-    else if (!(Gameboard.checkDiagonals() == null)) {
-      winner = Gameboard.checkDiagonals();
-      
-      let winnerName = (player1.getSymbol() == winner) ? player1.getName() : player2.getName();
+    } else if (!(Gameboard.checkDiagonals() == null)) {
+      winnerSymbol = Gameboard.checkDiagonals();
+
+      let winnerName =
+        player1.getSymbol() == winnerSymbol
+          ? player1.getName()
+          : player2.getName();
 
       printWinner(winnerName);
-    }
-    else if (!(Gameboard.checkTie() == null)) {
-      printWinner('Tie');
+    } else if (!(Gameboard.checkTie() == null)) {
+      printWinner("Tie");
     }
   };
 
@@ -107,15 +130,14 @@ const Game = (() => {
 
   const markSquare = (e) => {
     let squareId = e.target.id;
-
     let content = Gameboard.getSquareContent(squareId);
 
-    if (content == '' && activeGame) {
+    if (content == "" && activeGame) {
       let player = getActivePlayer();
       let symbol = player.getSymbol();
 
       Gameboard.setSquareContent(squareId, symbol);
-    
+
       toggleActivePlayer();
     }
 
@@ -126,20 +148,35 @@ const Game = (() => {
     activeGame = value;
   };
 
-  return {markSquare, setActiveGame};
+  return { markSquare, setActiveGame, printWinner };
 })();
 
 const Gameboard = (() => {
-  const gameboardArray = Array.from(document.querySelectorAll('.square'));
-  gameboardArray.forEach(square => {
-    square.addEventListener('click', Game.markSquare);
+  const gameboardArray = Array.from(document.querySelectorAll(".square"));
+  gameboardArray.forEach((square) => {
+    square.addEventListener("click", Game.markSquare);
   });
-  
+
+  const setVisible = (undo) => {
+    const gameboardDiv = document.querySelector(".gameboard");
+    if (undo) {
+      gameboardDiv.style.opacity = "0.7";
+    } else {
+      gameboardDiv.style.opacity = "1";
+    }
+  };
+
+  const clean = () => {
+    gameboardArray.forEach((square) => {
+      square.textContent = "";
+    });
+  };
+
   const getSquareContent = (squareId) => {
     return gameboardArray[squareId].textContent;
   };
 
-  const setSquareContent = (squareId, symbol) => { 
+  const setSquareContent = (squareId, symbol) => {
     gameboardArray[squareId].textContent = symbol;
   };
 
@@ -149,32 +186,46 @@ const Gameboard = (() => {
     let columns = [];
     let winner = null;
 
-    for(let i = 0; i <= 2; i++) {
-      columns[i] = [gameboardArray[i], gameboardArray[i + 3], gameboardArray[i + 6]]
+    for (let i = 0; i <= 2; i++) {
+      columns[i] = [
+        gameboardArray[i],
+        gameboardArray[i + 3],
+        gameboardArray[i + 6],
+      ];
     }
 
-    columns.forEach(column => {
-      const result = column.every(element => {
-        if (element.textContent == column[0].textContent && element.textContent != '') {
+    columns.forEach((column) => {
+      const result = column.every((element) => {
+        if (
+          element.textContent == column[0].textContent &&
+          element.textContent != ""
+        ) {
           return true;
         }
       });
       winner = result ? column[0].textContent : winner;
     });
     return winner;
-  }
+  };
 
   const checkRows = () => {
     let rows = [];
     let winner = null;
 
-    for(let i = 0; i <= 6; i = i + 3) {
-      rows[i] = [gameboardArray[i], gameboardArray[i + 1], gameboardArray[i + 2]]
+    for (let i = 0; i <= 6; i = i + 3) {
+      rows[i] = [
+        gameboardArray[i],
+        gameboardArray[i + 1],
+        gameboardArray[i + 2],
+      ];
     }
 
-    rows.forEach(row => {
-      const result = row.every(element => {
-        if (element.textContent == row[0].textContent && element.textContent != '') {
+    rows.forEach((row) => {
+      const result = row.every((element) => {
+        if (
+          element.textContent == row[0].textContent &&
+          element.textContent != ""
+        ) {
           return true;
         }
       });
@@ -189,13 +240,20 @@ const Gameboard = (() => {
 
     let j = 4;
 
-    for(let i = 0; j >= 2; i = i + 2, j = j - 2) {
-      diagonals[i] = [gameboardArray[i], gameboardArray[i + j], gameboardArray[i + j*2]];
+    for (let i = 0; j >= 2; i = i + 2, j = j - 2) {
+      diagonals[i] = [
+        gameboardArray[i],
+        gameboardArray[i + j],
+        gameboardArray[i + j * 2],
+      ];
     }
 
-    diagonals.forEach(diagonal => {
-      const result = diagonal.every(element => {
-        if (element.textContent == diagonal[0].textContent && element.textContent != '') {
+    diagonals.forEach((diagonal) => {
+      const result = diagonal.every((element) => {
+        if (
+          element.textContent == diagonal[0].textContent &&
+          element.textContent != ""
+        ) {
           return true;
         }
       });
@@ -205,15 +263,25 @@ const Gameboard = (() => {
   };
 
   const checkTie = () => {
-    const result = gameboardArray.every(element => {
-      if (element.textContent != '') {
+    const result = gameboardArray.every((element) => {
+      if (element.textContent != "") {
         return true;
       }
     });
     return result ? result : null;
   };
 
-  return {getSquareContent, setSquareContent, getGameboard, checkColumns, checkDiagonals, checkRows, checkTie};
+  return {
+    getSquareContent,
+    setVisible,
+    setSquareContent,
+    getGameboard,
+    checkColumns,
+    checkDiagonals,
+    checkRows,
+    checkTie,
+    clean,
+  };
 })();
 
 const Player = (symbol, lastClick, name) => {
@@ -223,7 +291,7 @@ const Player = (symbol, lastClick, name) => {
 
   const toggleLastClick = () => {
     lastClick = lastClick ? false : true;
-  }
+  };
 
-  return {getSymbol, getLastClick, toggleLastClick, getName};
+  return { getSymbol, getLastClick, toggleLastClick, getName };
 };
