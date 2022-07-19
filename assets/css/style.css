@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 :root {
-  --white-custom: #fef3f4;
+  --white-custom: #f9f1f5;
 }
 
 * {
@@ -81,16 +81,26 @@ nav > * {
   outline: none;
 }
 nav input {
-  padding: 3px 2px 1px;
-  font-size: 1.2rem;
+  padding: 3px 1px 2px;
+  font-weight: bold;
+  font-size: 1.3rem;
+
+  background-color: white;
+
+  border: none;
+  border-bottom: 1px solid rgb(19, 19, 19);
+}
+nav input::placeholder {
+  opacity: 1;
 }
 nav button {
   margin: 5px 4px;
-  padding: 10px 18px;
+  padding: 10px 17px;
   border: none;
+  border-radius: 2px;
 
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   
   cursor: pointer;
 
@@ -104,6 +114,19 @@ nav button {
   color: rgba(70, 79, 70, 0.8);
 }
 .abled {
-  background-color: greenyellow;
+  background-color: rgb(162, 253, 25);
   color: #1c1917;
+}
+
+.symbols .disabled {
+  background-color: red;
+  color: var(--white-custom);
+}
+#p1,
+#p1::placeholder {
+  color: rgb(162, 253, 25);
+}
+#p2,
+#p2::placeholder {
+  color: red;
 }

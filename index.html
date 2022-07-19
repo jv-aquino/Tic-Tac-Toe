@@ -11,12 +11,25 @@
   <body>
     <div class="container">
       <nav>
-        <input type='text' placeholder="Name" maxlength="30">
+        <input
+          type="text"
+          id="p1"
+          placeholder="Player1 name"
+          maxlength="30" spellcheck="false"
+          required
+        />
+        <input
+          type="text"
+          id="p2"
+          placeholder="Player2 name"
+          maxlength="30" spellcheck="false"
+          required
+        />
 
-      <div class="symbols">
-      <button type="button" class="abled" id="X">X</button>
-      <button type="button" class="disabled" id="O">O</button>
-      </div>
+        <div class="symbols">
+          <button type="button" class="abled" id="X">X</button>
+          <button type="button" class="disabled" id="O">O</button>
+        </div>
 
         <button id="start" type="button" class="disabled">Start</button>
       </nav>
